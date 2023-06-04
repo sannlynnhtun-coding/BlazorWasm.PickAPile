@@ -2236,6 +2236,7 @@ span.as_off.as_btn {
 .as_copyright_wrapper p {
     margin: 0;
     padding: 10px 0px;
+    color: white;
 }
 
 .as_footer_widget > ul > li a {
