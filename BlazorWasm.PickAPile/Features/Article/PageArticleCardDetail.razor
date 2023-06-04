@@ -1,0 +1,28 @@
+﻿<div class="as_main_wrapper as_about_page">
+    <section class="as_about_wrapper as_section_dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <div class="text-right">
+                        <img style="height: 300px;object-fit: cover;" src="articles/@Data.QuestionId/@(Data.PhotoId).jpg" alt="" class="img-responsive">
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-12">
+                    <div class="as-about-heading">
+                        <h1>@Data.AnswerName</h1>
+                        <p class="as_text_color">
+                            @Data.AnswerDesp
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+
+    [Parameter]
+    public TblAnswer Data { get; set; }
+
+}

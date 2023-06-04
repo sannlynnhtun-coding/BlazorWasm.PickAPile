@@ -1,0 +1,61 @@
+﻿@page "/"
+@using BlazorWasm.PickAPile.Models
+
+@if (Page == EnumPage.Article)
+{
+    <div class="row text-left">
+        @*@foreach (var question in Questions)
+        {
+            <PageArticle Data="question" OnReadMoreClick="ReadMore"/>
+        }*@
+        <PageArticle Model="Questions" OnReadMoreClick="ReadMore" />
+    </div>
+}
+else if (Page == EnumPage.ArticleCard)
+{
+    <button class="as_btn mt-3" @onclick="Back">Back</button>
+    <PageArticleCard QuestionId="@_questionId" Data="Answers" OnChoosePile="ChoosePile"/>
+}
+else if (Page == EnumPage.ArticleCardDetail)
+{
+    <button class="as_btn mt-3" @onclick="Back">Back</button>
+    <PageArticleCardDetail Data="Answer"/>
+}
+
+@code{
+    private EnumPage Page = EnumPage.Article;
+
+    //private List<TblQuestion?> Questions;
+    private TblQuestionPaginationDataModel Questions;
+
+    private List<TblAnswer> Answers;
+    private TblAnswer Answer;
+    private string? _questionId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Questions = _ArticleService.GetArticlesResponse();
+    }
+
+    void ReadMore(string? questionId)
+    {
+        _questionId = questionId;
+        Answers = _ArticleService.GetArticleCard(_questionId);
+        if (Answers == null || Answers.Count == 0) return;
+
+        Page = EnumPage.ArticleCard;
+    }
+
+    void Back()
+    {
+        Page = EnumPage.Article;
+    }
+
+    void ChoosePile(TblAnswer answer)
+    {
+        Answer = _ArticleService.GetArticleCardDetail(answer.AnswerId);
+        Answer.PhotoId = answer.PhotoId;
+        Page = EnumPage.ArticleCardDetail;
+    }
+
+}

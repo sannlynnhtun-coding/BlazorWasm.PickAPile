@@ -1,0 +1,114 @@
+﻿@if (Data != null)
+{
+    <div class="as_blog_box">
+        <div class="as_blog_img">
+            <a href="https://kamleshyadav.com/html/astrology/version-4/blog_detail.html">
+                <img src="articles/@Data[0].QuestionId/1.jpg" alt="" class="img-responsive">
+            </a>
+        </div>
+        <div class="as_blog_detail">
+            <h4 class="as_subheading "> @_question.QuestionName </h4>
+            <div class="as_blog_date_heading">
+                <ul class="as_blog_ul_li">
+                    <li>
+                        <a href="javascript:;" class="as_text_color"><img src="assets/images/svg/user2.svg" alt="">By - Admin</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="as_text_color"><img src="assets/images/svg/comment1.svg" alt="">0 comments</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="as_text_color"><img src="assets/images/svg/view1.svg" alt="">0 views</a>
+                    </li>
+                </ul>
+            </div>
+            <p class="as_margin0 as_text_color">
+                @_question.QuestionDesp
+            </p>
+            <div class="row as_blog_sngle_area">
+                @if (Data.Count % 4 == 0)
+                {
+                    for (int i = 0; i < Data.Count; i++)
+                    {
+                        int id = i;
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <img src="@(BindImage(i))" alt="" class="img-responsive" 
+                                 @onclick="() => ChoosePile(id)">
+                        </div>
+                    }
+                }
+                else if (Data.Count % 3 == 0)
+                {
+                    for (int i = 0; i < Data.Count; i++)
+                    {
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <img src="@(BindImage(i))" alt="" class="img-responsive">
+                        </div>
+                    }
+                }
+                else if (Data.Count % 2 == 0)
+                {
+                    for (int i = 0; i < Data.Count; i++)
+                    {
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <img src="@(BindImage(i))" alt="" class="img-responsive">
+                        </div>
+                    }
+                }
+                else if (Data.Count % 3 == 2)
+                {
+                    for (int i = 0; i < Data.Count - 2; i++)
+                    {
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <img src="@(BindImage(i))" alt="" class="img-responsive">
+                        </div>
+                    }
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                    </div>
+                    {
+                        int last1 = Data.Count - 2;
+                        int last2 = Data.Count - 1;
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <img src="@(BindImage(last1))" alt="" class="img-responsive">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <img src="@(BindImage(last2))" alt="" class="img-responsive">
+                        </div>
+                    }
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+
+    [Parameter]
+    public EventCallback<TblAnswer> OnChoosePile { get; set; }
+    
+    [Parameter]
+    public string QuestionId { get; set; }
+
+    [Parameter]
+    public List<TblAnswer> Data { get; set; }
+
+    private TblQuestion? _question;
+
+    protected override void OnParametersSet()
+    {
+        _question = _ArticleService.GetArticle(QuestionId);
+    }
+
+    private string BindImage(int i)
+    {
+        int questionId = Convert.ToInt32(Data[i].QuestionId);
+        return $"articles/{questionId}/{i + 1}.jpg";
+    }
+
+    async Task ChoosePile(int i)
+    {
+        Data[i].PhotoId = (i + 1).ToString();
+        await OnChoosePile.InvokeAsync(Data[i]);
+    }
+}
